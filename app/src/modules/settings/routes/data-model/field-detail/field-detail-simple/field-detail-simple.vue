@@ -41,6 +41,8 @@ const interfacesSorted = computed(() => {
 	);
 });
 
+const chosenInterface = syncFieldDetailStoreProperty('field.meta.interface');
+
 const groups = computed(() => {
 	const groupsWithInterfaces = [
 		{
@@ -84,12 +86,14 @@ const groups = computed(() => {
 		if (!search.value) return filteredInterfaces;
 		const searchValue = search.value!.toLowerCase();
 		return filteredInterfaces.filter(
-			(inter) => inter.id.toLowerCase().includes(searchValue) || inter.name.toLowerCase().includes(searchValue),
+			(inter) =>
+				// Always keep the chosen interface visible, e.g. when it was switched automatically (m2m -> files)
+				inter.id === chosenInterface.value ||
+				inter.id.toLowerCase().includes(searchValue) ||
+				inter.name.toLowerCase().includes(searchValue),
 		);
 	}
 });
-
-const chosenInterface = syncFieldDetailStoreProperty('field.meta.interface');
 
 const configRow = computed(() => {
 	if (!chosenInterface.value) return null;
